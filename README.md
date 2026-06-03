@@ -43,6 +43,7 @@ npm run dev
 ### Environment Variables
 
 **server/.env:**
+
 PORT=5000
 MONGO_URI=mongodb+srv://...
 JWT_SECRET=your-secret-key
@@ -50,6 +51,7 @@ GEMINI_API_KEY=your-gemini-key
 CLIENT_URL=http://localhost:5173
 
 **client/.env:**
+
 VITE_API_URL=http://localhost:5000
 VITE_APP_URL=http://localhost:5173
 

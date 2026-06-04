@@ -8,7 +8,6 @@ Many small and medium-sized businesses struggle to provide instant responses to 
 
 SupportNest solves this problem by allowing businesses to create their own AI-powered chatbot that can answer customer queries based on business-specific information. Each business receives a unique chatbot link and QR code that customers can access instantly from mobile devices.
 
----
 
 ## Why This Project?
 
@@ -23,7 +22,6 @@ According to industry research:
 
 SupportNest was built to address these challenges by providing businesses with an easy-to-deploy AI support solution without requiring technical expertise.
 
----
 
 ## Problem Statement
 
@@ -37,7 +35,6 @@ Businesses frequently face:
 
 Customers often leave websites or abandon purchases when answers are not available immediately.
 
----
 
 ## Solution
 
@@ -53,7 +50,6 @@ SupportNest enables businesses to:
 
 The platform transforms static business information into an intelligent conversational assistant.
 
----
 
 ## How It Works
 
@@ -65,7 +61,6 @@ The platform transforms static business information into an intelligent conversa
 6. AI responds using the business knowledge base
 7. Business owners can review chat logs and customer interactions
 
----
 
 ## Who Benefits?
 
@@ -91,7 +86,6 @@ The platform transforms static business information into an intelligent conversa
 * Scale customer support efficiently
 * Gain insights from customer conversations
 
----
 
 ## Key Features
 
@@ -123,7 +117,6 @@ Protected login and registration system with JWT authentication.
 
 Each business operates independently with its own data and chatbot experience.
 
----
 
 ## Micro-SaaS Concept
 
@@ -137,7 +130,6 @@ Instead of building a large enterprise platform, SupportNest focuses on one impo
 
 The platform is lightweight, scalable, and suitable for businesses that want an affordable AI support solution without investing in large customer service teams.
 
----
 
 ### Real-World Impact
 
@@ -150,8 +142,6 @@ SupportNest helps businesses:
 * Scale support operations without increasing manpower
 
 By transforming business knowledge into an AI-powered assistant, SupportNest enables businesses to serve more customers while reducing operational overhead.
-
----
 
 
 ## Tech Stack
@@ -238,7 +228,6 @@ VITE_APP_URL=http://localhost:5173
 * WhatsApp Integration
 * Website Widget Embedding
 
----
 
 ## Project Status
 
@@ -246,7 +235,6 @@ Current Version: MVP (Minimum Viable Product)
 
 SupportNest is a functional Micro-SaaS platform that demonstrates how AI can be leveraged to automate customer support for businesses through knowledge-driven conversational experiences.
 
----
 
 ## Author
 

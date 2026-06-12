@@ -11,59 +11,83 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-
+    <div className="min-h-screen bg-[#09090B] text-white">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-4 py-4">
-        <div className="max-w-4xl mx-auto flex justify-between items-center">
+      <div className="border-b border-zinc-800">
+        <div className="max-w-5xl mx-auto px-6 py-5 flex justify-between items-center">
           <div>
-            <h1 className="text-base font-semibold text-gray-900">
-              {business?.businessName}
+            <h1 className="text-2xl font-semibold">
+              SupportNest
             </h1>
-            <p className="text-xs text-gray-400 mt-0.5">
-              Welcome back, {business?.ownerName}
+
+            <p className="text-zinc-400 text-sm mt-1">
+              Business AI Support Workspace
             </p>
           </div>
+
           <button
             onClick={handleLogout}
-            className="text-xs text-red-500 border border-red-200 px-3 py-1.5 rounded-lg hover:bg-red-50 transition"
+            className="border border-zinc-700 px-4 py-2 rounded-lg text-sm hover:border-red-500 hover:text-red-400 transition"
           >
             Logout
           </button>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="max-w-4xl mx-auto px-4 py-5 space-y-4">
+      {/* Main Content */}
+      <div className="max-w-5xl mx-auto px-6 py-8">
+
+        {/* Welcome */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-semibold">
+            {business?.businessName}
+          </h2>
+
+          <p className="text-zinc-400 mt-1">
+            Welcome back, {business?.ownerName}
+          </p>
+        </div>
 
         {/* Action Cards */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid md:grid-cols-2 gap-4 mb-6">
           <div
             onClick={() => navigate("/knowledge")}
-            className="bg-white rounded-2xl border border-gray-100 p-4 cursor-pointer hover:shadow-sm transition active:scale-95"
+            className="bg-[#111113] border border-zinc-800 rounded-2xl p-6 cursor-pointer hover:border-purple-500/40 transition"
           >
-            <h2 className="text-sm font-semibold text-gray-800">Knowledge Base</h2>
-            <p className="text-xs text-gray-400 mt-1">
-              Manage your business info
+            <h3 className="text-lg font-semibold mb-2">
+              Knowledge Base
+            </h3>
+
+            <p className="text-zinc-400 text-sm">
+              Manage the business information used by your AI assistant.
             </p>
           </div>
 
           <div
             onClick={() => navigate("/logs")}
-            className="bg-white rounded-2xl border border-gray-100 p-4 cursor-pointer hover:shadow-sm transition active:scale-95"
+            className="bg-[#111113] border border-zinc-800 rounded-2xl p-6 cursor-pointer hover:border-purple-500/40 transition"
           >
-            <h2 className="text-sm font-semibold text-gray-800">Chat Logs</h2>
-            <p className="text-xs text-gray-400 mt-1">
-              View customer conversations
+            <h3 className="text-lg font-semibold mb-2">
+              Chat Logs
+            </h3>
+
+            <p className="text-zinc-400 text-sm">
+              Review customer conversations and support history.
             </p>
           </div>
         </div>
 
-        {/* Share Widget */}
-        <ShareWidget
-          businessId={business?.id}
-          businessName={business?.businessName}
-        />
+        {/* Share Assistant */}
+        <div className="bg-[#111113] border border-zinc-800 rounded-2xl p-6">
+          <h3 className="text-lg font-semibold mb-2">
+            Share Your Assistant
+          </h3>
+
+          <ShareWidget
+            businessId={business?.id}
+            businessName={business?.businessName}
+          />
+        </div>
 
       </div>
     </div>

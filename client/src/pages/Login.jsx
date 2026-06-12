@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 
 const EyeOpen = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -17,11 +17,20 @@ const EyeClosed = () => (
 
 export default function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
   const [serverError, setServerError] = useState("");
+  const [successMessage, setSuccessMessage] = useState(location.state?.message || "");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  
+  useEffect(() => {
+    if (successMessage) {
+      const timer = setTimeout(() => setSuccessMessage(""), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage]);
 
   const validateField = (name, value) => {
     let error = "";
@@ -46,11 +55,7 @@ export default function Login() {
   };
 
   const handleSubmit = async () => {
-    const emailErr = !form.email.trim()
-      ? "Email is required"
-      : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)
-      ? "Enter a valid email address"
-      : "";
+    const emailErr = !form.email.trim() ? "Email is required" : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) ? "Enter a valid email address" : "";
     const passErr = !form.password ? "Password is required" : "";
 
     setErrors({ email: emailErr, password: passErr });
@@ -64,78 +69,112 @@ export default function Login() {
       localStorage.setItem("business", JSON.stringify(res.data.business));
       navigate("/dashboard");
     } catch (err) {
-      setServerError(err.response?.data?.message || "Invalid credentials");
+      setServerError(err.response?.data?.message || "Unable to login. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-      <div className="bg-white p-8 rounded-2xl shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold text-gray-800 mb-1">Welcome Back</h1>
-        <p className="text-gray-500 text-sm mb-6">Login to your dashboard</p>
+  <div className="min-h-screen bg-[#09090B] text-white flex items-center justify-center px-6">
+    <div className="w-full max-w-md">
+      <div className="bg-[#111113] border border-zinc-800 rounded-2xl p-8 hover:border-purple-500/40 transition">
+        <div className="text-center mb-3">
+          <h1 className="text-2xl font-semibold mb-2">
+            SupportNest
+          </h1>
+          <p className="text-zinc-400 text-sm">
+            Welcome Back!
+          </p>
+         </div>
+
+        {successMessage && (
+          <div className="bg-green-500/10 border border-green-500/30 text-green-400 text-sm p-3 rounded-lg mb-5">
+            {successMessage}
+          </div>
+        )}
 
         {serverError && (
-          <div className="bg-red-50 text-red-600 text-sm p-3 rounded-lg mb-4 border border-red-200">
+          <div className="bg-red-500/10 border border-red-500/30 text-red-400 text-sm p-3 rounded-lg mb-5">
             {serverError}
           </div>
         )}
 
-        <div className="space-y-4">
+        <div className="space-y-5">
           <div>
+            <label className="block text-sm text-zinc-300 mb-2">
+              Email
+            </label>
+
             <input
               name="email"
               type="email"
-              placeholder="Email Address"
               value={form.email}
               onChange={handleChange}
               onBlur={handleBlur}
-              className={`w-full border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 transition
-                ${errors.email ? "border-red-400 focus:ring-red-300 bg-red-50" : "border-gray-200 focus:ring-blue-500"}`}
+              placeholder="Enter your email"
+              className="w-full bg-[#09090B] border border-zinc-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-purple-500"
             />
-            {errors.email && <p className="text-red-500 text-xs mt-1 ml-1">{errors.email}</p>}
+
+            {errors.email && (
+              <p className="text-red-400 text-xs mt-2">
+                {errors.email}
+              </p>
+            )}
           </div>
 
           <div>
+            <label className="block text-sm text-zinc-300 mb-2">
+              Password
+            </label>
+
             <div className="relative">
               <input
                 name="password"
                 type={showPassword ? "text" : "password"}
-                placeholder="Password"
                 value={form.password}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className={`w-full border rounded-lg px-4 py-3 pr-12 text-sm focus:outline-none focus:ring-2 transition
-                  ${errors.password ? "border-red-400 focus:ring-red-300 bg-red-50" : "border-gray-200 focus:ring-blue-500"}`}
+                placeholder="Enter your password"
+                className="w-full bg-[#09090B] border border-zinc-700 rounded-lg px-4 py-3 pr-12 text-white focus:outline-none focus:border-purple-500"
               />
+
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400"
               >
                 {showPassword ? <EyeClosed /> : <EyeOpen />}
               </button>
             </div>
-            {errors.password && <p className="text-red-500 text-xs mt-1 ml-1">{errors.password}</p>}
+
+            {errors.password && (
+              <p className="text-red-400 text-xs mt-2">
+                {errors.password}
+              </p>
+            )}
           </div>
 
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg text-sm font-semibold hover:bg-blue-700 transition disabled:opacity-50"
+            className="w-full bg-purple-600 hover:bg-purple-700 transition rounded-lg py-3 font-medium disabled:opacity-50"
           >
-            {loading ? "Logging in..." : "Login"}
+            {loading ? "Signing In..." : "Login"}
           </button>
         </div>
 
-        <p className="text-center text-sm text-gray-500 mt-6">
+        <p className="text-center text-zinc-400 mt-6">
           Don't have an account?{" "}
-          <Link to="/register" className="text-blue-600 font-medium hover:underline">
+          <Link
+            to="/register"
+            className="text-purple-400 hover:text-purple-300"
+          >
             Register
           </Link>
         </p>
       </div>
     </div>
-  );
+  </div>
+);
 }

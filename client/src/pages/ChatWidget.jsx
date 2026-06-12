@@ -5,13 +5,10 @@ import { useParams } from "react-router-dom";
 // ─── Typing Animation ─────────────────────────────────────
 const TypingIndicator = ({ initial }) => (
   <div className="flex items-start gap-3 px-4 py-2">
-    <div className="w-8 h-8 rounded-full bg-amber-600 flex items-center justify-center text-xs font-semibold text-white flex-shrink-0">
-      {initial}
-    </div>
     <div className="flex items-center gap-1 py-3">
-      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+      <div className="w-2 h-2 bg-purple-600 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+      <div className="w-2 h-2 bg-purple-600 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+      <div className="w-2 h-2 bg-purple-600 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
     </div>
   </div>
 );
@@ -24,7 +21,7 @@ const Message = ({ message, businessInitial }) => {
     return (
       <div className="flex justify-end px-4 py-1">
         <div className="max-w-[75%] sm:max-w-[60%]">
-          <div className="border border-gray-200 text-gray-800 rounded-2xl rounded-tr-sm px-4 py-2.5 text-sm leading-relaxed bg-white">
+          <div className="bg-[#111113] border border-purple-500/40 text-white rounded-2xl rounded-tr-sm px-4 py-2.5 text-sm leading-relaxed">
             {message.text}
           </div>
         </div>
@@ -33,12 +30,9 @@ const Message = ({ message, businessInitial }) => {
   }
 
   return (
-    <div className="flex items-start gap-3 px-4 py-1">
-      <div className="w-8 h-8 rounded-full bg-amber-600 flex items-center justify-center text-xs font-semibold text-white flex-shrink-0 mt-0.5">
-        {businessInitial}
-      </div>
+    <div className="flex px-4 py-1">
       <div className="max-w-[75%] sm:max-w-[65%]">
-        <div className={`text-sm leading-relaxed py-1 ${message.isError ? "text-red-500" : "text-gray-800"}`}>
+        <div className={`bg-[#111113] border border-purple-500/40 rounded-2xl rounded-tl-sm px-4 py-2.5 text-sm leading-relaxed ${message.isError ? "text-red-400" : "text-white"}`}>
           {message.text}
         </div>
       </div>
@@ -50,7 +44,7 @@ const Message = ({ message, businessInitial }) => {
 const SuggestionPill = ({ text, onClick }) => (
   <button
     onClick={() => onClick(text)}
-    className="text-xs border border-gray-200 text-gray-600 px-3 py-1.5 rounded-full hover:bg-gray-50 transition whitespace-nowrap"
+    className="text-xs border border-purple-500/40 text-gray-600 px-3 py-1.5 rounded-full hover:bg-gray-50 transition whitespace-nowrap"
   >
     {text}
   </button>
@@ -168,17 +162,14 @@ export default function ChatWidget() {
   // ── Name Entry Screen ─────────────────────────────────
   if (!nameSubmitted) {
     return (
-      <div className="fixed inset-0 bg-white flex flex-col items-center justify-center px-6">
+      <div className="fixed inset-0 bg-[#09090B] flex flex-col items-center justify-center px-6">
         <div className="w-full max-w-sm">
           <div className="flex flex-col items-center mb-8">
-            <div className="w-14 h-14 rounded-full bg-amber-600 flex items-center justify-center text-white text-xl font-semibold mb-4">
-              {businessInitial}
-            </div>
-            <h1 className="text-xl font-semibold text-gray-900 text-center">
+            <h1 className="text-3xl font-bold text-white text-center">
               {businessName || "Loading..."}
             </h1>
-            <p className="text-sm text-gray-500 mt-1 text-center">
-              AI-powered support - ask us anything
+            <p className="text-zinc-400 mt-2 text-center">
+              AI-powered customer support - ask us anything
             </p>
           </div>
 
@@ -189,20 +180,19 @@ export default function ChatWidget() {
               value={nameInput}
               onChange={(e) => setNameInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleNameSubmit()}
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gray-300 text-gray-800 placeholder-gray-400"
+              className="w-full bg-[#111113] border border-zinc-700 rounded-xl px-4 py-3 text-white placeholder:text-zinc-500 focus:outline-none focus:border-purple-500"
               autoFocus
             />
             <button
               onClick={handleNameSubmit}
               disabled={!nameInput.trim()}
-              className="w-full bg-gray-900 text-white py-3 rounded-xl text-sm font-medium hover:bg-gray-800 transition disabled:opacity-40"
-            >
-              Start conversation
+            className="w-full bg-purple-600 hover:bg-purple-700 transition rounded-xl py-3 font-medium text-white disabled:opacity-50">
+              Start
             </button>
           </div>
 
           <p className="text-xs text-gray-400 text-center mt-6">
-            Powered by AI Support Bot
+            Powered by SupportNest AI
           </p>
         </div>
       </div>
@@ -211,21 +201,14 @@ export default function ChatWidget() {
 
   // ── Chat Screen ───────────────────────────────────────
   return (
-    <div className="fixed inset-0 flex flex-col bg-white max-w-2xl mx-auto">
+    <div className="fixed inset-0 flex flex-col bg-[#09090B] max-w-2xl mx-auto">
 
       {/* Header - always fixed at top */}
-      <div className="flex-shrink-0 flex items-center gap-3 px-4 py-3 border-b border-gray-200 bg-white">
-        <div className="w-8 h-8 rounded-full bg-amber-600 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0">
-          {businessInitial}
-        </div>
+      <div className="flex-shrink-0 flex items-center gap-3 px-4 py-3 border-b border-zinc-800 bg-[#09090B]">
         <div className="flex-1 min-w-0">
-          <h1 className="text-sm font-semibold text-gray-900 truncate">
+          <h1 className="text-sm font-semibold text-white truncate">
             {businessName}
           </h1>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full bg-green-500" />
-          <span className="text-xs text-gray-400">Online</span>
         </div>
       </div>
 
@@ -240,36 +223,75 @@ export default function ChatWidget() {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Bar - always fixed at bottom */}
-      <div className="flex-shrink-0 border-t border-gray-200 px-4 py-3 bg-white">
-        <div className="flex items-end gap-2 bg-gray-50 rounded-2xl px-4 py-2 border border-gray-200 focus-within:border-gray-300 transition">
-          <textarea
-            ref={inputRef}
-            value={input}
-            onChange={(e) => {
-              setInput(e.target.value);
-              e.target.style.height = "auto";
-              e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px";
-            }}
-            onKeyDown={handleKeyDown}
-            placeholder="Type your question..."
-            rows={1}
-            className="flex-1 bg-transparent text-sm text-gray-800 placeholder-gray-400 focus:outline-none resize-none py-1 max-h-28"
-          />
-          <button
-            onClick={() => handleSend()}
-            disabled={!input.trim() || loading}
-            className="w-8 h-8 rounded-full bg-gray-900 flex items-center justify-center hover:bg-gray-700 transition disabled:opacity-30 disabled:cursor-not-allowed flex-shrink-0 mb-0.5"
-          >
-            <svg className="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-            </svg>
-          </button>
-        </div>
-        <p className="text-xs text-gray-400 text-center mt-2">
-          AI may make mistakes - verify important info directly
-        </p>
-      </div>
+      {/* Input Area */}
+<div className="flex-shrink-0 border-t border-zinc-800 bg-[#09090B] px-4 py-4">
+
+  <div className="flex items-end gap-3">
+
+    <div className="flex-1 bg-[#111113] rounded-2xl px-4 py-3 border border-zinc-700 focus-within:border-white focus-within:shadow-[0_0_15px_rgba(255,255,255,0.15)] transition-all duration-200">
+
+      <textarea
+        ref={inputRef}
+        value={input}
+        onChange={(e) => {
+          setInput(e.target.value);
+          e.target.style.height = "auto";
+          e.target.style.height =
+            Math.min(e.target.scrollHeight, 120) + "px";
+        }}
+        onKeyDown={handleKeyDown}
+        placeholder="Type your question..."
+        rows={1}
+        className="w-full bg-transparent text-sm text-white placeholder:text-zinc-500 focus:outline-none resize-none py-1 max-h-28"
+      />
+
+    </div>
+
+    <button
+      onClick={() => handleSend()}
+      disabled={!input.trim() || loading}
+      className="
+        w-12
+        h-12
+        rounded-full
+        bg-black
+        border
+        border-zinc-700
+        flex
+        items-center
+        justify-center
+        transition-all
+        duration-200
+        hover:border-white
+        hover:shadow-[0_0_15px_rgba(255,255,255,0.2)]
+        disabled:opacity-30
+        disabled:cursor-not-allowed
+        flex-shrink-0
+      "
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-5 h-5 text-white"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M5 12h14M12 5l7 7-7 7"
+        />
+      </svg>
+    </button>
+
+  </div>
+
+  <p className="text-xs text-zinc-500 text-center mt-3">
+    AI may make mistakes - verify important info directly
+  </p>
+
+</div>
 
     </div>
   );

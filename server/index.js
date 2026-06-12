@@ -11,8 +11,10 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["https://ai-support-bot-zeta.vercel.app",
-    "https://ai-support-4lyogudfc-ai-support-bot.vercel.app"],
+    origin: [
+      "https://ai-support-bot-zeta.vercel.app",
+      "https://ai-support-4lyogudfc-ai-support-bot.vercel.app"
+    ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],

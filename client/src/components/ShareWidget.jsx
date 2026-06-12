@@ -3,6 +3,8 @@ import { QRCodeSVG } from "qrcode.react";
 
 export default function ShareWidget({ businessId, businessName }) {
   const [copied, setCopied] = useState(false);
+  const [showQR, setShowQR] = useState(false);
+  const [showLink, setShowLink] = useState(false);
   const qrRef = useRef(null);
 
   const chatUrl = `${import.meta.env.VITE_APP_URL || window.location.origin}/chat/${businessId}`;
@@ -28,78 +30,177 @@ export default function ShareWidget({ businessId, businessName }) {
 
     const svgData = new XMLSerializer().serializeToString(svg);
     const img = new Image();
+
     img.onload = () => {
       ctx.drawImage(img, 40, 20, size - 80, size - 80);
+
       ctx.fillStyle = "#374151";
       ctx.font = "14px sans-serif";
       ctx.textAlign = "center";
-      ctx.fillText(`Scan to chat with ${businessName}`, size / 2, size - 20);
+      ctx.fillText(
+        `Scan to chat with ${businessName}`,
+        size / 2,
+        size - 20
+      );
 
       const link = document.createElement("a");
       link.download = `${businessName}-qr-code.png`;
       link.href = canvas.toDataURL("image/png");
       link.click();
     };
-    img.src = "data:image/svg+xml;base64," + btoa(svgData);
+
+    img.src =
+      "data:image/svg+xml;base64," +
+      btoa(svgData);
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-5">
-      <h2 className="text-sm font-semibold text-gray-800 mb-4">
-        Share Your Chatbot
-      </h2>
+  <>
+    <div className="space-y-6">
 
-      {/* Link Row */}
-      <div className="flex gap-2 mb-5">
-        <div className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-xs text-gray-600 truncate">
-          {chatUrl}
+      {/* Share Information */}
+      <div className="bg-[#111113] border border-zinc-800 rounded-2xl p-6">
+        <h2 className="text-lg font-semibold text-white mb-3">
+          Share Information
+        </h2>
+
+        <p className="text-zinc-400 leading-relaxed">
+          Customers can access your AI assistant by scanning a QR code
+          or opening the chatbot link directly.
+        </p>
+
+        <div className="mt-4 text-sm text-zinc-500">
+          • Shop Counters
+          <br />
+          • Business Cards
+          <br />
+          • Websites
+          <br />
+          • Customer Support Pages
         </div>
-        <button
-          onClick={handleCopy}
-          className={`px-4 py-2.5 rounded-xl text-xs font-medium transition ${
-            copied
-              ? "bg-green-100 text-green-700"
-              : "bg-gray-900 text-white hover:bg-gray-700"
-          }`}
-        >
-          {copied ? "Copied!" : "Copy"}
-        </button>
       </div>
 
-      {/* Open in new tab */}
-      <a
-        href={chatUrl}
-        target="_blank"
-        rel="noreferrer"
-        className="block w-full text-center border border-gray-200 text-gray-600 py-2.5 rounded-xl text-xs font-medium hover:bg-gray-50 transition mb-5"
-      >
-        Open Chat Page
-      </a>
+      {/* Chatbot Access */}
+      <div className="bg-[#111113] border border-zinc-800 rounded-2xl p-6">
+        <h2 className="text-lg font-semibold text-white mb-2">
+          Chatbot Access
+        </h2>
 
-      {/* QR Code */}
-      <div className="flex flex-col items-center">
-        <p className="text-xs text-gray-500 mb-3">
-          Print this QR code for your shop counter
+        <p className="text-zinc-400 mb-4">
+          Share your chatbot with customers using a secure link or QR code.
         </p>
-        <div
-          ref={qrRef}
-          className="bg-white p-3 rounded-xl border border-gray-200"
-        >
-          <QRCodeSVG
-            value={chatUrl}
-            size={160}
-            bgColor="#ffffff"
-            fgColor="#111827"
-            level="M"
-          />
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <button
+          onClick={() => setShowLink(true)}
+          className="text-center border border-zinc-700 py-3 rounded-lg text-zinc-300 hover:border-purple-500 transition">
+            Share Link
+          </button>
+          <a
+            href={chatUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="text-center border border-zinc-700 py-3 rounded-lg text-zinc-300 hover:border-purple-500 transition"
+          >
+            Open Chat
+          </a>
+          <button
+            onClick={() => setShowQR(true)}
+            className="text-center border border-zinc-700 py-3 rounded-lg text-zinc-300 hover:border-purple-500 transition" >
+              Show QR
+          </button>
         </div>
-        <button
-          onClick={handleDownloadQR}
-          className="mt-3 flex items-center gap-2 text-xs text-gray-600 border border-gray-200 px-4 py-2 rounded-xl hover:bg-gray-50 transition"
-        >
-          Download QR Code
-        </button>
       </div>
     </div>
-  );
+
+    {/* Share Link Modal */}
+    {showLink && (
+      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 px-4">
+        <div className="bg-[#111113] border border-zinc-800 rounded-2xl p-6 w-full max-w-md">
+
+          <h2 className="text-xl font-semibold text-white mb-3">
+            Share Link
+          </h2>
+
+          <p className="text-zinc-400 mb-4">
+            Share this chatbot link with customers.
+          </p>
+
+          <div className="bg-[#09090B] border border-zinc-700 rounded-lg px-4 py-3 text-sm text-zinc-300 break-all mb-5">
+            {chatUrl}
+          </div>
+
+          <div className="flex gap-3">
+            <button
+              onClick={handleCopy}
+              className={`flex-1 py-3 rounded-lg transition ${
+                copied
+                  ? "bg-green-600 text-white"
+                  : "bg-purple-600 hover:bg-purple-700 text-white"
+              }`}
+            >
+              {copied ? "Copied!" : "Copy Link"}
+            </button>
+
+            <button
+              onClick={() => setShowLink(false)}
+              className="flex-1 border border-zinc-700 text-zinc-300 rounded-lg py-3 hover:border-zinc-500 transition"
+            >
+              Close
+            </button>
+          </div>
+
+        </div>
+      </div>
+    )}
+
+    {/* QR Modal */}
+    {showQR && (
+      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 px-4">
+        <div className="bg-[#111113] border border-zinc-800 rounded-2xl p-6 w-full max-w-md">
+
+          <h2 className="text-xl font-semibold text-white mb-3">
+            QR Access
+          </h2>
+
+          <p className="text-zinc-400 mb-6">
+            Customers can scan this QR code to start chatting instantly.
+          </p>
+
+          <div className="flex justify-center mb-6">
+            <div
+              ref={qrRef}
+              className="bg-white p-4 rounded-xl"
+            >
+              <QRCodeSVG
+                value={chatUrl}
+                size={220}
+                bgColor="#ffffff"
+                fgColor="#111827"
+                level="M"
+              />
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <button
+              onClick={handleDownloadQR}
+              className="flex-1 bg-purple-600 hover:bg-purple-700 text-white rounded-lg py-3 transition"
+            >
+              Download QR
+            </button>
+
+            <button
+              onClick={() => setShowQR(false)}
+              className="flex-1 border border-zinc-700 text-zinc-300 rounded-lg py-3 hover:border-zinc-500 transition"
+            >
+              Close
+            </button>
+          </div>
+
+        </div>
+      </div>
+    )}
+  </>
+);
 }

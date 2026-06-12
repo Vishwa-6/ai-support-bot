@@ -42,7 +42,7 @@ const EyeClosed = () => (
 
 const InputField = ({ name, type = "text", placeholder, value, onChange, onBlur, error, showToggle, showPassword, onTogglePassword }) => (
   <div>
-    <div className="relative">
+    <div className="relative group">
       <input
         name={name}
         type={showToggle ? (showPassword ? "text" : "password") : type}
@@ -50,21 +50,25 @@ const InputField = ({ name, type = "text", placeholder, value, onChange, onBlur,
         value={value}
         onChange={onChange}
         onBlur={onBlur}
-        className={`w-full border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 transition
-          ${error ? "border-red-400 focus:ring-red-300 bg-red-50" : "border-gray-200 focus:ring-blue-500 bg-white"}
-          ${showToggle ? "pr-12" : ""}`}
+        className={`w-full bg-[#09090B] border rounded-lg px-4 py-3 text-white focus:outline-none focus:border-purple-500
+          ${
+            error
+            ? "border-red-500"
+            : "border-zinc-700"
+          }
+        ${showToggle ? " pr-12" : ""}`}
       />
       {showToggle && (
         <button
           type="button"
           onClick={onTogglePassword}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-cyan-400 transition"
         >
           {showPassword ? <EyeClosed /> : <EyeOpen />}
         </button>
       )}
     </div>
-    {error && <p className="text-red-500 text-xs mt-1 ml-1">{error}</p>}
+    {error && <p className="text-red-400 text-xs mt-2 ml-1 font-semibold">{error}</p>}
   </div>
 );
 
@@ -111,51 +115,103 @@ export default function Register() {
     if (!validateAll()) return;
     setLoading(true);
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/register`, form);
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("business", JSON.stringify(res.data.business));
-      navigate("/dashboard");
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/register`, form);
+      navigate("/login", { state: { message: "Registration successful! Please login with your credentials." } });
     } catch (err) {
-      setServerError(err.response?.data?.message || "Something went wrong");
+      setServerError(err.response?.data?.message || "Unable to create account. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-      <div className="bg-white p-8 rounded-2xl shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold text-gray-800 mb-1">Create Account</h1>
-        <p className="text-gray-500 text-sm mb-6">Set up your AI support bot</p>
+    <div className="min-h-screen bg-[#09090B] text-white flex items-center justify-center px-6">
 
-        {serverError && (
-          <div className="bg-red-50 text-red-600 text-sm p-3 rounded-lg mb-4 border border-red-200">
-            {serverError}
+      <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-12">
+        <div className="w-full max-w-md">
+
+          <div className="bg-[#111113] border border-zinc-800 rounded-2xl p-8 hover:border-purple-500/40 transition">
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold mb-2 text-center">
+                SupportNest
+                </h1>
+                <p className="text-zinc-400 text-center mb-8">
+                  Create your AI support workspace.
+                </p>
+            </div>
+
+            {serverError && (
+              <div className="bg-red-500/20 text-red-300 text-sm p-4 rounded-lg mb-6 border border-red-500/50 backdrop-blur">
+                ❌ {serverError}
+              </div>
+            )}
+
+            <div className="space-y-4">
+              <InputField
+                name="ownerName"
+                placeholder="Your Full Name"
+                value={form.ownerName}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={errors.ownerName}
+              />
+              <InputField
+                name="businessName"
+                placeholder="Business Name"
+                value={form.businessName}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={errors.businessName}
+              />
+              <InputField
+                name="email"
+                type="email"
+                placeholder="Email Address"
+                value={form.email}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={errors.email}
+              />
+              <InputField
+                name="password"
+                placeholder="Password (min 6 characters)"
+                value={form.password}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={errors.password}
+                showToggle={true}
+                showPassword={showPassword}
+                onTogglePassword={() => setShowPassword(!showPassword)}
+              />
+
+              <button
+                onClick={handleSubmit}
+                disabled={loading}
+                className="w-full bg-purple-600 hover:bg-purple-700 transition rounded-lg py-3 font-medium disabled:opacity-50"
+              >
+                <span className="relative z-10 flex items-center justify-center">
+                  {loading ? (
+                    <>
+                      Creating Account...
+                    </>
+                  ) : (
+                    "Create Account"
+                  )}
+                </span>
+              </button>
+            </div>
+
+            <p className="text-center text-gray-400 mt-6">
+              Already have an account?{" "}
+              <Link to="/login"
+              className="text-purple-400 hover:text-purple-300">
+              Login
+              </Link>
+            </p>
           </div>
-        )}
-
-        <div className="space-y-4">
-          <InputField name="ownerName" placeholder="Your Name" value={form.ownerName} onChange={handleChange} onBlur={handleBlur} error={errors.ownerName} />
-          <InputField name="businessName" placeholder="Business Name" value={form.businessName} onChange={handleChange} onBlur={handleBlur} error={errors.businessName} />
-          <InputField name="email" type="email" placeholder="Email Address" value={form.email} onChange={handleChange} onBlur={handleBlur} error={errors.email} />
-          <InputField name="password" placeholder="Password (min 6 characters)" value={form.password} onChange={handleChange} onBlur={handleBlur} error={errors.password} showToggle={true} showPassword={showPassword} onTogglePassword={() => setShowPassword(!showPassword)} />
-
-          <button
-            onClick={handleSubmit}
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg text-sm font-semibold hover:bg-blue-700 transition disabled:opacity-50"
-          >
-            {loading ? "Creating account..." : "Create Account"}
-          </button>
         </div>
-
-        <p className="text-center text-sm text-gray-500 mt-6">
-          Already have an account?{" "}
-          <Link to="/login" className="text-blue-600 font-medium hover:underline">
-            Login
-          </Link>
-        </p>
       </div>
+
     </div>
   );
 }

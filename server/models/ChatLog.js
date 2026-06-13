@@ -19,6 +19,18 @@ const chatLogSchema = new mongoose.Schema(
       type: String,
       default: "Anonymous",
     },
+    sessionId: {
+      type: String,
+      required: false,
+    },
+    isStarred: {
+      type: Boolean,
+      default: false,
+    },
+    isUnresolved: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

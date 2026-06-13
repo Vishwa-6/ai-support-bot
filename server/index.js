@@ -9,12 +9,19 @@ const chatRoutes = require("./routes/chat");
 
 const app = express();
 
+const allowedOrigins = [
+  "https://ai-support-bot-zeta.vercel.app",
+  "https://ai-support-4lyogudfc-ai-support-bot.vercel.app"
+];
+if (process.env.CLIENT_URL) {
+  allowedOrigins.push(process.env.CLIENT_URL);
+} else {
+  allowedOrigins.push("http://localhost:5173");
+}
+
 app.use(
   cors({
-    origin: [
-      "https://ai-support-bot-zeta.vercel.app",
-      "https://ai-support-4lyogudfc-ai-support-bot.vercel.app"
-    ],
+    origin: allowedOrigins,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],

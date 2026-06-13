@@ -53,12 +53,19 @@ const SuggestionPill = ({ text, onClick }) => (
 // ─── Main Chat Widget ─────────────────────────────────────
 export default function ChatWidget() {
   const { businessId } = useParams();
-  const [messages, setMessages] = useState([]);
+  
+  // Retrieve session storage values
+  const storedName = sessionStorage.getItem(`chat_customer_name_${businessId}`) || "";
+  const storedSessionId = sessionStorage.getItem(`chat_session_id_${businessId}`) || "";
+  const storedMessages = sessionStorage.getItem(`chat_messages_${businessId}`);
+
+  const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : []);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [businessName, setBusinessName] = useState("");
-  const [customerName, setCustomerName] = useState("");
-  const [nameSubmitted, setNameSubmitted] = useState(false);
+  const [customerName, setCustomerName] = useState(storedName);
+  const [sessionId, setSessionId] = useState(storedSessionId);
+  const [nameSubmitted, setNameSubmitted] = useState(!!storedName && !!storedSessionId);
   const [nameInput, setNameInput] = useState("");
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
@@ -68,6 +75,12 @@ export default function ChatWidget() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
+
+  useEffect(() => {
+    if (nameSubmitted && messages.length > 0) {
+      sessionStorage.setItem(`chat_messages_${businessId}`, JSON.stringify(messages));
+    }
+  }, [messages, nameSubmitted, businessId]);
 
   useEffect(() => {
     const fetchBusinessName = async () => {
@@ -89,16 +102,24 @@ export default function ChatWidget() {
   const handleNameSubmit = () => {
     if (!nameInput.trim()) return;
     const name = nameInput.trim();
+    const sessId = Date.now() + Math.random().toString(36).substring(2, 9);
+    
     setCustomerName(name);
+    setSessionId(sessId);
     setNameSubmitted(true);
-    setMessages([
+
+    sessionStorage.setItem(`chat_customer_name_${businessId}`, name);
+    sessionStorage.setItem(`chat_session_id_${businessId}`, sessId);
+
+    const initialMessages = [
       {
         id: Date.now(),
         role: "bot",
         text: `Hi ${name}! How can I help you today?`,
         time: getTime(),
       },
-    ]);
+    ];
+    setMessages(initialMessages);
   };
 
   const handleSend = async (overrideText) => {
@@ -122,7 +143,7 @@ export default function ChatWidget() {
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/chat/${businessId}`,
-        { question, customerName }
+        { question, customerName, sessionId }
       );
 
       const botText = res.data.rateLimited
@@ -156,6 +177,19 @@ export default function ChatWidget() {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
+    }
+  };
+
+  const handleRestart = () => {
+    if (window.confirm("Restart the conversation? This will clear history.")) {
+      sessionStorage.removeItem(`chat_customer_name_${businessId}`);
+      sessionStorage.removeItem(`chat_session_id_${businessId}`);
+      sessionStorage.removeItem(`chat_messages_${businessId}`);
+      setCustomerName("");
+      setSessionId("");
+      setMessages([]);
+      setNameSubmitted(false);
+      setNameInput("");
     }
   };
 
@@ -204,12 +238,18 @@ export default function ChatWidget() {
     <div className="fixed inset-0 flex flex-col bg-[#09090B] max-w-2xl mx-auto">
 
       {/* Header - always fixed at top */}
-      <div className="flex-shrink-0 flex items-center gap-3 px-4 py-3 border-b border-zinc-800 bg-[#09090B]">
-        <div className="flex-1 min-w-0">
+      <div className="flex-shrink-0 flex items-center justify-between px-4 py-3 border-b border-zinc-800 bg-[#09090B]">
+        <div className="min-w-0">
           <h1 className="text-sm font-semibold text-white truncate">
             {businessName}
           </h1>
         </div>
+        <button
+          onClick={handleRestart}
+          className="text-xs text-zinc-400 hover:text-red-400 border border-zinc-800 hover:border-red-500/30 px-2 py-1 rounded transition"
+        >
+          Reset Session
+        </button>
       </div>
 
       {/* Messages - only this scrolls */}

@@ -52,7 +52,9 @@ router.get("/", auth, async (req, res) => {
   try {
     const chunks = await KnowledgeChunk.find({
       businessId: req.business.id,
-    }).select("text createdAt");
+    })
+      .select("text createdAt")
+      .lean();
 
     res.json({ chunks });
   } catch (err) {

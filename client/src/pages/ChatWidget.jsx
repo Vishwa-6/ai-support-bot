@@ -193,6 +193,78 @@ export default function ChatWidget() {
     }
   };
 
+  const handleDownloadPDF = () => {
+    const today = new Date().toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+
+    const transcript = messages
+      .map((msg) => {
+        const sender = msg.role === "customer" ? customerName : "AI Assistant";
+        return `<tr>
+          <td style="padding:8px 12px;vertical-align:top;white-space:nowrap;color:#888;font-size:12px;">${msg.time || ""}</td>
+          <td style="padding:8px 12px;vertical-align:top;font-weight:600;white-space:nowrap;color:${msg.role === "customer" ? "#7c3aed" : "#059669"};font-size:13px;">${sender}</td>
+          <td style="padding:8px 12px;vertical-align:top;color:#333;font-size:13px;line-height:1.6;">${msg.text}</td>
+        </tr>`;
+      })
+      .join("");
+
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8" />
+        <title>Chat Transcript - ${businessName}</title>
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body { font-family: 'Inter', -apple-system, sans-serif; background: #fff; color: #1a1a1a; padding: 40px; }
+          .header { border-bottom: 2px solid #7c3aed; padding-bottom: 20px; margin-bottom: 24px; }
+          .header h1 { font-size: 22px; font-weight: 700; color: #1a1a1a; }
+          .header p { font-size: 13px; color: #666; margin-top: 4px; }
+          .meta { display: flex; gap: 32px; margin-top: 12px; }
+          .meta span { font-size: 12px; color: #888; }
+          .meta strong { color: #333; }
+          table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+          tr:nth-child(even) td { background: #fafafa; }
+          tr td { border-bottom: 1px solid #f0f0f0; }
+          .footer { margin-top: 32px; padding-top: 16px; border-top: 1px solid #e5e5e5; text-align: center; font-size: 11px; color: #aaa; }
+          @media print {
+            body { padding: 20px; }
+            @page { margin: 15mm; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <h1>${businessName} — Chat Transcript</h1>
+          <p>Conversation log from your AI support assistant</p>
+          <div class="meta">
+            <span>Customer: <strong>${customerName}</strong></span>
+            <span>Date: <strong>${today}</strong></span>
+            <span>Messages: <strong>${messages.length}</strong></span>
+          </div>
+        </div>
+        <table>${transcript}</table>
+        <div class="footer">
+          Powered by SupportNest AI &middot; Generated on ${today}
+        </div>
+      </body>
+      </html>
+    `;
+
+    const printWindow = window.open("", "_blank");
+    if (printWindow) {
+      printWindow.document.write(htmlContent);
+      printWindow.document.close();
+      setTimeout(() => {
+        printWindow.print();
+      }, 400);
+    }
+  };
+
   // ── Name Entry Screen ─────────────────────────────────
   if (!nameSubmitted) {
     return (
@@ -244,12 +316,25 @@ export default function ChatWidget() {
             {businessName}
           </h1>
         </div>
-        <button
-          onClick={handleRestart}
-          className="text-xs text-zinc-400 hover:text-red-400 border border-zinc-800 hover:border-red-500/30 px-2 py-1 rounded transition"
-        >
-          Reset Session
-        </button>
+        <div className="flex items-center gap-2">
+          {messages.length > 1 && (
+            <button
+              onClick={handleDownloadPDF}
+              className="text-xs text-zinc-400 hover:text-purple-400 border border-zinc-800 hover:border-purple-500/30 px-2 py-1 rounded transition flex items-center gap-1"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Save PDF
+            </button>
+          )}
+          <button
+            onClick={handleRestart}
+            className="text-xs text-zinc-400 hover:text-red-400 border border-zinc-800 hover:border-red-500/30 px-2 py-1 rounded transition"
+          >
+            Reset
+          </button>
+        </div>
       </div>
 
       {/* Messages - only this scrolls */}

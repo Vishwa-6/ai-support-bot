@@ -53,7 +53,7 @@ const SuggestionPill = ({ text, onClick }) => (
 // ─── Main Chat Widget ─────────────────────────────────────
 export default function ChatWidget() {
   const { businessId } = useParams();
-  
+
   // Retrieve session storage values
   const storedName = sessionStorage.getItem(`chat_customer_name_${businessId}`) || "";
   const storedSessionId = sessionStorage.getItem(`chat_session_id_${businessId}`) || "";
@@ -103,7 +103,7 @@ export default function ChatWidget() {
     if (!nameInput.trim()) return;
     const name = nameInput.trim();
     const sessId = Date.now() + Math.random().toString(36).substring(2, 9);
-    
+
     setCustomerName(name);
     setSessionId(sessId);
     setNameSubmitted(true);
@@ -292,7 +292,7 @@ export default function ChatWidget() {
             <button
               onClick={handleNameSubmit}
               disabled={!nameInput.trim()}
-            className="w-full bg-purple-600 hover:bg-purple-700 transition rounded-xl py-3 font-medium text-white disabled:opacity-50">
+              className="w-full bg-purple-600 hover:bg-purple-700 transition rounded-xl py-3 font-medium text-white disabled:opacity-50">
               Start
             </button>
           </div>
@@ -349,33 +349,33 @@ export default function ChatWidget() {
       </div>
 
       {/* Input Area */}
-<div className="flex-shrink-0 border-t border-zinc-800 bg-[#09090B] px-4 py-4">
+      <div className="flex-shrink-0 border-t border-zinc-800 bg-[#09090B] px-4 py-4">
 
-  <div className="flex items-end gap-3">
+        <div className="flex items-end gap-3">
 
-    <div className="flex-1 bg-[#111113] rounded-2xl px-4 py-3 border border-zinc-700 focus-within:border-white focus-within:shadow-[0_0_15px_rgba(255,255,255,0.15)] transition-all duration-200">
+          <div className="flex-1 bg-[#111113] rounded-2xl px-4 py-3 border border-zinc-700 focus-within:border-white focus-within:shadow-[0_0_15px_rgba(255,255,255,0.15)] transition-all duration-200">
 
-      <textarea
-        ref={inputRef}
-        value={input}
-        onChange={(e) => {
-          setInput(e.target.value);
-          e.target.style.height = "auto";
-          e.target.style.height =
-            Math.min(e.target.scrollHeight, 120) + "px";
-        }}
-        onKeyDown={handleKeyDown}
-        placeholder="Type your question..."
-        rows={1}
-        className="w-full bg-transparent text-sm text-white placeholder:text-zinc-500 focus:outline-none resize-none py-1 max-h-28"
-      />
+            <textarea
+              ref={inputRef}
+              value={input}
+              onChange={(e) => {
+                setInput(e.target.value);
+                e.target.style.height = "auto";
+                e.target.style.height =
+                  Math.min(e.target.scrollHeight, 120) + "px";
+              }}
+              onKeyDown={handleKeyDown}
+              placeholder="Type your question..."
+              rows={1}
+              className="w-full bg-transparent text-sm text-white placeholder:text-zinc-500 focus:outline-none resize-none py-1 max-h-28"
+            />
 
-    </div>
+          </div>
 
-    <button
-      onClick={() => handleSend()}
-      disabled={!input.trim() || loading}
-      className="
+          <button
+            onClick={() => handleSend()}
+            disabled={!input.trim() || loading}
+            className="
         w-12
         h-12
         rounded-full
@@ -393,30 +393,30 @@ export default function ChatWidget() {
         disabled:cursor-not-allowed
         flex-shrink-0
       "
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="w-5 h-5 text-white"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        strokeWidth="2"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M5 12h14M12 5l7 7-7 7"
-        />
-      </svg>
-    </button>
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-5 h-5 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M5 12h14M12 5l7 7-7 7"
+              />
+            </svg>
+          </button>
 
-  </div>
+        </div>
 
-  <p className="text-xs text-zinc-500 text-center mt-3">
-    AI may make mistakes - verify important info directly
-  </p>
+        <p className="text-xs text-zinc-500 text-center mt-3">
+          AI may make mistakes - verify important info directly
+        </p>
 
-</div>
+      </div>
 
     </div>
   );

@@ -2,9 +2,9 @@ const fetch = require("node-fetch");
 
 // Models to try in order - fastest/cheapest first.
 const MODELS = [
-  "gemini-2.0-flash-lite",
-  "gemini-2.5-flash-lite",
-  "gemini-2.5-flash",
+  "gemini-2.5-flash-lite",  // Primary: latest generation, fast & cost-efficient
+  "gemini-2.5-flash",       // Fallback: stronger reasoning
+  "gemini-2.5-pro",         // Premium fallback: highest quality for complex queries
 ];
 
 const generateAnswer = async (context, question) => {
@@ -28,7 +28,7 @@ Answer:`;
       console.log(`🤖 Trying model: ${model}`);
 
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

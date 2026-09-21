@@ -26,6 +26,11 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   
   useEffect(() => {
+    // Silent warm-up ping in case user navigates directly to /login
+    axios.get(`${import.meta.env.VITE_API_URL}/`).catch(() => {});
+  }, []);
+
+  useEffect(() => {
     if (successMessage) {
       const timer = setTimeout(() => setSuccessMessage(""), 5000);
       return () => clearTimeout(timer);

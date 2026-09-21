@@ -1,8 +1,14 @@
-
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Landing() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Silent warm-up ping to wake up Render backend from sleep
+    axios.get(`${import.meta.env.VITE_API_URL}/`).catch(() => {});
+  }, []);
 
   const features = [
     {

@@ -199,16 +199,16 @@ npm run dev
 
 **server/.env:**
 
-PORT=5000
-MONGO_URI=mongodb+srv://...
-JWT_SECRET=your-secret-key
-GEMINI_API_KEY=your-gemini-key
-CLIENT_URL=http://localhost:5173
+* PORT=5000
+* MONGO_URI=mongodb+srv://...
+* JWT_SECRET=your-secret-key
+* GEMINI_API_KEY=your-gemini-key
+* CLIENT_URL=http://localhost:5173
 
 **client/.env:**
 
-VITE_API_URL=http://localhost:5000
-VITE_APP_URL=http://localhost:5173
+* VITE_API_URL=http://localhost:5000
+* VITE_APP_URL=http://localhost:5173
 
 ## Deployment
 
@@ -241,7 +241,3 @@ SupportNest is a functional Micro-SaaS platform that demonstrates how AI can be 
 Developed by Vishwa
 
 Business AI Support Platform | Micro-SaaS Project
-
-## License
-
-MIT
